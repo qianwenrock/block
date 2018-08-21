@@ -19,6 +19,8 @@ from django.contrib import admin
 from post import views as post_views
 
 urlpatterns = [
+    # 添加默认
+    url(r'^$', post_views.post_list),
     # 帖子列表
     url(r'^post/list/', post_views.post_list),
     # 创建帖子
