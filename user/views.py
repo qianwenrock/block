@@ -28,7 +28,25 @@ def register(request):
 
 
 def login(request):
-    return render(request, 'login.html', {})
+    if request.method == 'POST':
+        # 获取到用户提交的昵称和密码
+        nickname = request.POST.get('nickname')
+        password = request.POST.get('password')
+        try:
+            # 由于get会报错所有给他try下
+            user = User.objects.get(nickname=nickname)
+        except User.DoseNotExist:
+            return render(request, 'login.html', {'error':'用户不存在'})
+        # 用户存在 接着进行密码判断
+        if check_password(password, user.password):
+            # 记录用户的登录状态
+            request.session['uid'] = user.id
+            request.session['nickname'] = user.nickname
+            # 跳转到用户信息模块 后面不需要跟着参数，因为参数存在session只要用户没退出都可用session
+            return redirect('/user/info/')
+        else:
+            return render(request, 'login.html', {'error': '用户密码错误'})
+    return render(request, 'login.html')
 
 
 def logout(request):
