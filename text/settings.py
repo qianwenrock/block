@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from urllib.parse import urlencode
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    'django.contrib.sessions',  #为sess初始化一个存储的空间
     # 'django.contrib.messages',
     'django.contrib.staticfiles',
     'post',
@@ -130,3 +131,41 @@ STATICFILES_DIRS = [
 # 处理图片的配置
 MEDIA_ROOT = 'medias'  #上传的文件所存放的位置,存放在medias这个文件中  django自动创建
 MEDIA_URL = '/medias/' #图片显示的位置
+
+
+# 第三方登录
+# Weibo OAuth
+WB_APP_KEY = '1310374555'
+WB_APP_SECRET = 'e5cf3ddc50d77ba6f038013003c29550'
+# 微博回调页内容
+WB_CALLBACK = 'http://seamile.org/weibo/callback/'
+
+# 第一步: 授权接口
+WB_AUTH_API = 'https://api.weibo.com/oauth2/authorize'
+# 参数
+WB_AUTH_ARGS = {
+    'client_id': WB_APP_KEY,
+    'redirect_uri': WB_CALLBACK,
+    'display': 'default',
+}
+# 微博认证url
+WB_AUTH_URL = '%s?%s' % (WB_AUTH_API, urlencode(WB_AUTH_ARGS))
+
+
+# 第二步: 获取 token 接口
+WB_ACCESS_TOKEN_API = 'https://api.weibo.com/oauth2/access_token'
+WB_ACCESS_TOKEN_ARGS = {
+    'client_id': WB_APP_KEY,
+    'client_secret': WB_APP_SECRET,
+    'redirect_uri': WB_CALLBACK,
+    'grant_type': 'authorization_code',
+    'code': None,
+}
+
+
+# 第三步: 获取用户信息
+WB_USER_SHOW_API = 'https://api.weibo.com/2/users/show.json'
+WB_USER_SHOW_ARGS = {
+    'access_token': None,
+    'uid': None,
+}

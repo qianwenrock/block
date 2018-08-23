@@ -43,5 +43,8 @@ urlpatterns = [
     url(r'^user/login/', user_views.login),
     url(r'^user/logout/', user_views.logout),
     url(r'^user/info/', user_views.user_info),
+
+    # 第三方登录接口
+    url(r'^weibo/callback/', user_views.wb_callback)
     ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

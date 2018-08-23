@@ -13,7 +13,13 @@ class User(models.Model):
     password = models.CharField(max_length=128)
     # 用户图像
     icon = models.ImageField()
+    # 第三方平台的icon
+    plt_icon = models.CharField(max_length=256, default='')
     # 用户年龄
-    age = models.IntegerField()
+    age = models.IntegerField(default=18)
     # 性别
     sex = models.CharField(max_length=8, choices=SEX)
+
+    @property
+    def avatar(self):
+        return self.icon.url if self.icon else self.plt_icon
