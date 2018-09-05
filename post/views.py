@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from post.models import Post
 # 向上取整
 from math import ceil
+from post.helper import page_cach
 # Create your views here.
 # 帖子列表操作
+@page_cach(60)
 def post_list(request):
     # 获取到当前的页码
     page = int(request.GET.get('page',1))
@@ -32,6 +34,7 @@ def create_post(request):
     return render(request, 'create_post.html')
 
 # 修改帖子的操作
+
 def edit_post(request):
     if request.method == 'POST':
         # 先获取要修改的数据(通过hidden里面要提交的post_id获取的)
@@ -48,6 +51,8 @@ def edit_post(request):
         return render(request, 'edit_post.html', {'post':post})
 
 # 阅读帖子的操作
+# 给帖子添加缓存
+@page_cach(5)
 def read_post(request):
     # 获取post_id
     post_id = int(request.GET.get('post_id'))
