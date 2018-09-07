@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect
 from post.models import Post
 # 向上取整
 from math import ceil
-from post.helper import page_cach
+from post.helper import page_cach,read_count
+from post.helper import top_n
 # Create your views here.
 # 帖子列表操作
 @page_cach(60)
@@ -52,6 +53,7 @@ def edit_post(request):
 
 # 阅读帖子的操作
 # 给帖子添加缓存
+@read_count
 @page_cach(5)
 def read_post(request):
     # 获取post_id
@@ -69,3 +71,7 @@ def search_post(request):
         posts = Post.objects.get(content__contains=keyword)
         return render(request, 'search.html', {'posts':posts})
     return render(request, 'search.html', {})
+
+def top10(request):
+    rank_data = top_n(10)
+    return render(request,'top10.html',{'rank_data':rank_data})

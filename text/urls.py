@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^post/read/', post_views.read_post),
     # 搜索帖子
     url(r'^post/search/', post_views.search_post),
+    # 帖子排行
+    url(r'^post/top10/', post_views.top10),
 
     # 用户的url
     #
