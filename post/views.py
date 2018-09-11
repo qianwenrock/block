@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from post.models import Post
+from post.models import Post, Comment
 # 向上取整
 from math import ceil
 from post.helper import page_cach,read_count
@@ -78,3 +78,11 @@ def search_post(request):
 def top10(request):
     rank_data = top_n(10)
     return render(request,'top10.html',{'rank_data':rank_data})
+
+@login_required
+def comment(request):
+    uid = request.session.get('uid')
+    post_id = request.POST.get('post_id')
+    content = request.POST.get('content')
+    Comment.objects.create(uid=uid, post_id=post_id, content=content)
+    return redirect('/post/read/post_id=%s'%post_id)
