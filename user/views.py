@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password,check_password
 from user.models import User
 from user.forms import RegisterForm
 from user.helper import get_wb_access_token,get_wb_user_show
+from user.helper import login_required
 
 # Create your views here.
 def register(request):
@@ -60,7 +61,7 @@ def logout(request):
     request.session.flush()
     return redirect('/user/register/')
 
-
+@login_required
 def user_info(request):
     # 从session中获取用户的id
     uid = request.session.get('uid')

@@ -4,6 +4,7 @@ from post.models import Post
 from math import ceil
 from post.helper import page_cach,read_count
 from post.helper import top_n
+from user.helper import login_required
 # Create your views here.
 # 帖子列表操作
 @page_cach(60)
@@ -24,18 +25,20 @@ def post_list(request):
     return render(request, 'post_list.html' ,{'posts':posts, 'pages':range(pages)})
 
 # 创建帖子的操作
+@login_required
 def create_post(request):
+    uid = request.session.get('uid')
     if request.method == 'POST':
         title = request.POST.get('title')
         content = request.POST.get('content')
         # 根据title和content创建帖子
-        post = Post.objects.create(title=title, content=content)
+        post = Post.objects.create(uid=uid, title=title, content=content)
         # 创建完成之后跳转到阅读页面
         return redirect('/post/read/?post_id=%s' %post.id)
     return render(request, 'create_post.html')
 
 # 修改帖子的操作
-
+@login_required
 def edit_post(request):
     if request.method == 'POST':
         # 先获取要修改的数据(通过hidden里面要提交的post_id获取的)
